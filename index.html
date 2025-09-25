@@ -1,0 +1,304 @@
+%%html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analisador de Pagamentos de Férias</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0c0a09; /* Cor de fundo stone-950 */
+        }
+        /* Efeito de gradiente animado para o fundo */
+        .animated-gradient-background {
+            background: linear-gradient(-45deg, #111827, #1f2937, #374151);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        /* Estilização e transição do modal */
+        #resultModal {
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+        #modalContent.modal-enter {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        #modalContent.modal-enter-active {
+            opacity: 1;
+            transform: scale(1);
+        }
+    </style>
+</head>
+<body class="text-gray-200 flex items-center justify-center min-h-screen p-4 animated-gradient-background">
+
+    <div class="w-full max-w-2xl mx-auto">
+        <div class="bg-gray-900/50 backdrop-blur-xl border border-gray-700/50 rounded-2xl shadow-2xl p-6 sm:p-8 space-y-8">
+
+            <div class="text-center">
+                <div class="flex justify-center items-center mb-4">
+                    <svg class="w-10 h-10 text-indigo-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+                </div>
+                <h1 class="text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-500 mb-2">
+                    Analisador de Pagamentos
+                </h1>
+                <p class="text-gray-400">
+                    Extraia e verifique o status de pagamento de férias a partir de um PDF.
+                </p>
+            </div>
+
+            <div class="space-y-4">
+                <label for="pdfFile" class="flex flex-col items-center justify-center w-full h-40 border-2 border-gray-600/50 border-dashed rounded-xl cursor-pointer bg-gradient-to-br from-gray-800/50 to-gray-900/50 hover:border-indigo-400 hover:bg-gray-800 transition-all duration-300">
+                    <div id="upload-prompt" class="flex flex-col items-center justify-center text-center">
+                        <svg class="w-10 h-10 mb-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                        </svg>
+                        <p class="mb-2 text-sm text-gray-400"><span class="font-semibold text-indigo-400">Clique para enviar</span> ou arraste e solte</p>
+                        <p class="text-xs text-gray-500">Apenas arquivos PDF</p>
+                    </div>
+                    <div id="file-info" class="hidden flex-col items-center justify-center text-center">
+                        <p class="text-lg font-medium text-cyan-400">Arquivo Selecionado:</p>
+                        <p id="fileName" class="mt-2 text-sm bg-gray-700/50 text-gray-300 py-1 px-3 rounded-full"></p>
+                    </div>
+                    <input id="pdfFile" type="file" class="hidden" accept=".pdf" />
+                </label>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-4">
+                <button id="analyzeBtn" class="w-full bg-indigo-600 hover:bg-indigo-500 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-bold py-3 px-4 rounded-lg transition-all duration-300 shadow-lg shadow-indigo-900/50 focus:outline-none focus:ring-4 focus:ring-indigo-500/50 transform hover:-translate-y-0.5">
+                    Analisar Pagamento
+                </button>
+                <button id="clearBtn" class="w-full bg-gray-700 hover:bg-rose-600 text-white font-bold py-3 px-4 rounded-lg transition-all duration-300 shadow-lg focus:outline-none focus:ring-4 focus:ring-rose-500/50 transform hover:-translate-y-0.5 hidden">
+                    Limpar
+                </button>
+            </div>
+
+            <div id="loader" class="flex justify-center items-center pt-4 hidden">
+                <div class="border-t-transparent border-solid animate-spin rounded-full border-indigo-400 border-4 h-10 w-10"></div>
+                <p class="ml-4 text-gray-400">Analisando documento...</p>
+            </div>
+        </div>
+
+        <footer class="text-center mt-8">
+            <p class="text-sm text-gray-600">&copy; 2025. Todos os direitos reservados.</p>
+        </footer>
+    </div>
+
+    <div id="resultModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden z-50">
+        <div id="modalContent" class="bg-gray-900 border border-gray-700/50 rounded-2xl shadow-2xl w-full max-w-4xl transform transition-all max-h-[90vh] overflow-y-auto">
+            </div>
+    </div>
+
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js';
+
+        const pdfFileInput = document.getElementById('pdfFile');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const loader = document.getElementById('loader');
+        const fileNameDisplay = document.getElementById('fileName');
+        const resultModal = document.getElementById('resultModal');
+        const modalContent = document.getElementById('modalContent');
+        const uploadPrompt = document.getElementById('upload-prompt');
+        const fileInfo = document.getElementById('file-info');
+
+        // Inicialmente, o botão de análise está desabilitado
+        analyzeBtn.disabled = true;
+
+        function reconstructLinesFromItems(items) {
+            const lines = new Map();
+            const Y_TOLERANCE = 5;
+            items.forEach(item => {
+                const y = Math.round(item.transform[5]);
+                let foundKey = null;
+                for (const key of lines.keys()) {
+                    if (Math.abs(y - key) <= Y_TOLERANCE) { foundKey = key; break; }
+                }
+                const targetKey = foundKey !== null ? foundKey : y;
+                if (!lines.has(targetKey)) { lines.set(targetKey, []); }
+                lines.get(targetKey).push(item);
+            });
+            const sortedLines = Array.from(lines.entries()).sort((a, b) => b[0] - a[0]);
+            return sortedLines.map(([, lineItems]) => {
+                lineItems.sort((a, b) => a.transform[4] - b.transform[4]);
+                return lineItems.map(item => item.str).join(' ');
+            });
+        }
+
+        // --- FUNÇÃO CORRIGIDA ---
+        function analyzePaymentStatus(text) {
+            const lines = text.split('\n');
+            let name = 'Não encontrado';
+            let exerciseDate = 'Não encontrada';
+
+            // Loop para encontrar nome e data de exercício
+            for (const line of lines) {
+                // Procura pela linha que contém "NOME:"
+                const nameMatch = line.match(/NOME\s*:\s*(.*)/i);
+                if (nameMatch && nameMatch[1]) {
+                    let rawContent = nameMatch[1].trim();
+                    // Verifica se "DATA EXERCÍCIO" está na mesma linha e remove
+                    const dateIndex = rawContent.toUpperCase().indexOf("DATA EXERCÍCIO");
+                    if (dateIndex !== -1) {
+                        // Se estiver, extrai apenas a parte do nome
+                        name = rawContent.substring(0, dateIndex).trim();
+                    } else {
+                        // Senão, a linha inteira (após "NOME:") é o nome
+                        name = rawContent;
+                    }
+                }
+
+                // Procura de forma independente pela data de exercício
+                const dateMatch = line.match(/DATA EXERC[ÍI]CIO\s*:\s*(.*)/i);
+                if (dateMatch && dateMatch[1]) {
+                    exerciseDate = dateMatch[1].trim();
+                }
+            }
+
+            const headerRegex = /Data Início\s+Data Fim\s+Data Início\s+Data fim\s+Pagamento/i;
+            let headerIndex = lines.findIndex(line => headerRegex.test(line));
+            if (headerIndex === -1) { return { error: 'A tabela de férias com o cabeçalho esperado não foi encontrada.' }; }
+
+            let dataRow = '';
+            for (let i = headerIndex + 1; i < lines.length; i++) {
+                if (/\d{2}\/\d{2}\/\d{4}/.test(lines[i])) { dataRow = lines[i].trim(); break; }
+            }
+            if (!dataRow) { return { error: 'Nenhuma linha de dados encontrada abaixo do cabeçalho.' }; }
+
+            const columns = dataRow.split(/\s+/);
+            if (columns.length < 5) { return { error: 'A formatação da linha de dados é inválida.' }; }
+
+            const paymentInfo = columns[4];
+            const yearMatch = paymentInfo ? paymentInfo.match(/\d{4}/) : null;
+            if (!yearMatch) { return { error: `Não foi possível identificar o ano de pagamento na coluna: "${paymentInfo || ''}"` }; }
+
+            const paymentYear = parseInt(yearMatch[0], 10);
+            let statusMessage, statusType;
+            if (paymentYear === 2025) {
+                statusMessage = 'Servidor Foi Pago'; statusType = 'pago';
+            } else {
+                statusMessage = 'Servidor Não Foi Pago'; statusType = 'nao_pago';
+            }
+            return { name, exerciseDate, columns, statusMessage, statusType };
+        }
+
+        function displayAnalysisResult(result) {
+            let content, statusIcon, statusColor, statusBgColor;
+            if (result.error) {
+                statusIcon = `<svg class="w-16 h-16 text-yellow-400 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>`;
+                content = `<div class="p-8 text-center"><div class="mb-4">${statusIcon}</div><h3 class="text-2xl font-bold text-yellow-400 mb-2">Erro na Análise</h3><p class="text-gray-300">${result.error}</p></div>`;
+            } else {
+                if (result.statusType === 'pago') {
+                    statusIcon = `<svg class="w-16 h-16 text-emerald-400 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`;
+                    statusColor = 'text-emerald-400';
+                    statusBgColor = 'bg-emerald-500/10';
+                } else {
+                    statusIcon = `<svg class="w-16 h-16 text-rose-500 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`;
+                    statusColor = 'text-rose-500';
+                    statusBgColor = 'bg-rose-500/10';
+                }
+                const headers = ['Início Aquis.', 'Fim Aquis.', 'Início Férias', 'Fim Férias', 'Pagamento', 'Valor', 'Tipo', 'Perc', 'Dias'];
+                const tableRows = `<tr class="border-b border-gray-700/50">${result.columns.map((col, i) => `<td class="p-3 whitespace-nowrap">${headers[i] ? col : ''}</td>`).join('')}</tr>`;
+                content = `
+                    <div class="text-center p-6 sm:p-8">
+                        <div class="mb-6">${statusIcon}</div>
+                        <h3 class="text-3xl font-bold ${statusColor} mb-6">${result.statusMessage}</h3>
+                    </div>
+                    <div class="bg-gray-900/70 px-6 sm:px-8 py-5 border-y border-gray-700/50">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <p class="text-sm font-semibold text-indigo-400 mb-1">NOME DO SERVIDOR</p>
+                                <p class="text-lg text-white">${result.name}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-semibold text-indigo-400 mb-1">DATA DE EXERCÍCIO</p>
+                                <p class="text-lg text-white">${result.exerciseDate}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="${statusBgColor} p-6 sm:p-8">
+                        <p class="text-base font-semibold text-gray-300 mb-3">Detalhes do Último Lançamento</p>
+                        <div class="overflow-x-auto"><table class="w-full text-left text-sm"><thead><tr class="text-gray-400">${headers.map(h => `<th class="p-3 font-semibold whitespace-nowrap">${h}</th>`).join('')}</tr></thead><tbody class="text-white">${tableRows}</tbody></table></div>
+                    </div>`;
+            }
+            modalContent.innerHTML = `<div class="relative"><button id="closeModalBtn" class="absolute top-4 right-4 text-gray-500 hover:text-white transition z-10"><svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button>${content}</div>`;
+            resultModal.classList.remove('hidden');
+            document.getElementById('closeModalBtn').addEventListener('click', () => hideModal());
+            resultModal.addEventListener('click', (e) => { if (e.target === resultModal) { hideModal(); }});
+        }
+
+        function hideModal() {
+            resultModal.classList.add('hidden');
+        }
+
+        pdfFileInput.addEventListener('change', () => {
+            hideModal();
+            if (pdfFileInput.files.length > 0) {
+                const file = pdfFileInput.files[0];
+                fileNameDisplay.textContent = file.name;
+                uploadPrompt.classList.add('hidden');
+                fileInfo.classList.remove('hidden');
+                fileInfo.classList.add('flex');
+                clearBtn.classList.remove('hidden');
+                analyzeBtn.disabled = false;
+            } else {
+                clearBtn.click();
+            }
+        });
+
+        analyzeBtn.addEventListener('click', async () => {
+            const file = pdfFileInput.files[0];
+            if (!file) { return; }
+            loader.classList.remove('hidden');
+            analyzeBtn.disabled = true;
+            clearBtn.disabled = true;
+            try {
+                const fileBuffer = await file.arrayBuffer();
+                const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(fileBuffer) }).promise;
+                let allLines = [];
+                for (let i = 1; i <= pdf.numPages; i++) {
+                    const page = await pdf.getPage(i);
+                    const textContent = await page.getTextContent();
+                    allLines.push(...reconstructLinesFromItems(textContent.items));
+                }
+                const fullText = allLines.join('\n');
+                const analysis = analyzePaymentStatus(fullText);
+                displayAnalysisResult(analysis);
+            } catch (error) {
+                console.error('Erro ao processar o PDF:', error);
+                displayAnalysisResult({ error: 'O arquivo parece ser um PDF inválido ou corrompido.' });
+            } finally {
+                loader.classList.add('hidden');
+                analyzeBtn.disabled = false;
+                clearBtn.disabled = false;
+            }
+        });
+
+        clearBtn.addEventListener('click', () => {
+            pdfFileInput.value = '';
+            fileNameDisplay.textContent = '';
+            fileInfo.classList.add('hidden');
+            fileInfo.classList.remove('flex');
+            uploadPrompt.classList.remove('hidden');
+            clearBtn.classList.add('hidden');
+            analyzeBtn.disabled = true;
+            hideModal();
+        });
+    </script>
+</body>
+</html>
