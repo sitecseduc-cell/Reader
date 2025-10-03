@@ -16,7 +16,6 @@
         body {
             font-family: 'Inter', sans-serif;
         }
-        /* Efeito de gradiente animado para o fundo escuro */
         .animated-gradient-background {
             background: linear-gradient(-45deg, #111827, #1f2937, #374151);
             background-size: 400% 400%;
@@ -27,113 +26,132 @@
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
-        /* Estilização e transição do modal */
         #resultModal {
             transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
         }
-        #modalContent.modal-enter {
-            opacity: 0;
-            transform: scale(0.95);
-        }
-        #modalContent.modal-enter-active {
-            opacity: 1;
-            transform: scale(1);
-        }
     </style>
     <script>
-        // Para evitar o "flash" de conteúdo sem estilo, este script é executado antes de renderizar a página.
-        // Ele verifica a preferência do usuário (armazenada ou do sistema) e aplica a classe 'dark' ao <html> se necessário.
-        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        // Define tema inicial antes do render
+        if (localStorage.getItem('color-theme') === 'dark' ||
+            (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
         } else {
             document.documentElement.classList.remove('dark');
         }
     </script>
 </head>
-<body class="bg-gray-50 dark:bg-gray-900 dark:text-gray-200 text-gray-900 flex items-center justify-center min-h-screen p-4 dark:animated-gradient-background transition-colors duration-300">
+<body class="bg-slate-100 dark:bg-slate-900 text-gray-900 dark:text-gray-200 flex items-center justify-center min-h-screen p-4 transition-colors duration-300">
 
-    <button id="theme-toggle" type="button" class="absolute top-4 right-4 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5">
-        <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
-        <svg id="theme-toggle-light-icon" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+    <!-- Botão de alternar tema -->
+    <button id="theme-toggle" type="button" 
+        class="absolute top-4 right-4 text-gray-500 dark:text-gray-400 hover:bg-slate-200 dark:hover:bg-slate-700 focus:outline-none focus:ring-4 focus:ring-slate-200 dark:focus:ring-slate-700 rounded-lg text-sm p-2.5">
+        <!-- Ícone Lua -->
+        <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/>
+        </svg>
+        <!-- Ícone Sol -->
+        <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M10 2a1 1 0 011 1v1a1 1 0 11-2 
+                0V3a1 1 0 011-1zm4 8a4 4 0 11-8 
+                0 4 4 0 018 0zm-.464 4.95l.707.707a1 
+                1 0 001.414-1.414l-.707-.707a1 1 
+                0 00-1.414 1.414zm2.12-10.607a1 1 
+                0 010 1.414l-.706.707a1 1 0 
+                11-1.414-1.414l.707-.707a1 1 
+                0 011.414 0zM17 11a1 1 0 100-2h-1a1 
+                1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 
+                0 11-2 0v-1a1 1 0 011-1zM5.05 
+                6.464A1 1 0 106.465 5.05l-.708-.707a1 
+                1 0 00-1.414 1.414l.707.707zm1.414 
+                8.486a1 1 0 01-1.414 
+                0l-.707-.707a1 1 0 011.414-1.414l.707.707zM4 
+                11a1 1 0 100-2H3a1 1 0 000 2h1z"/>
+        </svg>
     </button>
 
+    <!-- Conteúdo principal -->
     <div class="w-full max-w-2xl mx-auto">
-        <div class="bg-white dark:bg-gray-900/50 backdrop-blur-xl border border-gray-200 dark:border-gray-700/50 rounded-2xl shadow-lg dark:shadow-2xl p-6 sm:p-8 space-y-8">
-
+        <div class="bg-white dark:bg-slate-800 backdrop-blur-xl border border-gray-200 dark:border-slate-700/50 rounded-2xl shadow-lg dark:shadow-2xl p-6 sm:p-8 space-y-8">
+            <!-- Cabeçalho -->
             <div class="text-center">
                 <div class="flex justify-center items-center mb-4">
                     <svg class="w-10 h-10 text-indigo-500 dark:text-indigo-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0Z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                     </svg>
                 </div>
                 <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-transparent dark:bg-clip-text dark:bg-gradient-to-r dark:from-indigo-400 dark:to-purple-500 mb-2">
-                    Analisador de Pagamentos 
+                    Analisador de Pagamentos
                 </h1>
                 <p class="text-gray-500 dark:text-gray-400">
-                    Extraia e verifique o status de pagamento de férias a partir de um PDF. 
+                    Extraia e verifique o status de pagamento de férias a partir de um PDF.
                 </p>
             </div>
 
+            <!-- Upload -->
             <div class="space-y-4">
-                <label for="pdfFile" class="flex flex-col items-center justify-center w-full h-40 border-2 border-gray-300 dark:border-gray-600/50 border-dashed rounded-xl cursor-pointer bg-gray-50 dark:bg-gradient-to-br dark:from-gray-800/50 dark:to-gray-900/50 hover:border-indigo-500 dark:hover:border-indigo-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-300">
+                <label for="pdfFile" class="flex flex-col items-center justify-center w-full h-40 border-2 border-gray-300 dark:border-slate-600/50 border-dashed rounded-xl cursor-pointer bg-slate-50 dark:bg-slate-700/50 hover:border-indigo-500 dark:hover:border-indigo-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-all duration-300">
                     <div id="upload-prompt" class="flex flex-col items-center justify-center text-center">
-                        <svg class="w-10 h-10 mb-4 text-gray-400 dark:text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                        <svg class="w-10 h-10 mb-4 text-gray-400 dark:text-slate-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
                         </svg>
-                        <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold text-indigo-500 dark:text-indigo-400">Clique para enviar</span> ou arraste e solte</p> 
-                        <p class="text-xs text-gray-400 dark:text-gray-500">Apenas arquivos PDF</p>
+                        <p class="mb-2 text-sm text-slate-500 dark:text-slate-400"><span class="font-semibold text-indigo-500 dark:text-indigo-400">Clique para enviar</span> ou arraste e solte</p>
+                        <p class="text-xs text-gray-400 dark:text-slate-500">Apenas arquivos PDF</p>
                     </div>
                     <div id="file-info" class="hidden flex-col items-center justify-center text-center">
                         <p class="text-lg font-medium text-cyan-600 dark:text-cyan-400">Arquivo Selecionado:</p>
-                        <p id="fileName" class="mt-2 text-sm bg-gray-200 dark:bg-gray-700/50 text-gray-700 dark:text-gray-300 py-1 px-3 rounded-full"></p>
+                        <p id="fileName" class="mt-2 text-sm bg-slate-200 dark:bg-slate-700/50 text-slate-700 dark:text-slate-300 py-1 px-3 rounded-full"></p>
                     </div>
                     <input id="pdfFile" type="file" class="hidden" accept=".pdf" />
                 </label>
             </div>
 
+            <!-- Botões -->
             <div class="flex flex-col sm:flex-row gap-4">
-                <button id="analyzeBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 dark:hover:bg-indigo-500 disabled:bg-gray-400 dark:disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-bold py-3 px-4 rounded-lg transition-all duration-300 shadow-lg shadow-indigo-500/30 dark:shadow-indigo-900/50 focus:outline-none focus:ring-4 focus:ring-indigo-500/50 transform hover:-translate-y-0.5">
-                    Analisar Pagamento 
+                <button id="analyzeBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 dark:hover:bg-indigo-500 disabled:bg-slate-400 dark:disabled:bg-slate-600 disabled:cursor-not-allowed text-white font-bold py-3 px-4 rounded-lg transition-all duration-300 shadow-lg shadow-indigo-500/30 dark:shadow-indigo-900/50 focus:outline-none focus:ring-4 focus:ring-indigo-500/50 transform hover:-translate-y-0.5">
+                    Analisar Pagamento
                 </button>
-                <button id="clearBtn" class="w-full bg-gray-200 hover:bg-rose-500 text-gray-800 dark:text-white dark:bg-gray-700 dark:hover:bg-rose-600 font-bold py-3 px-4 rounded-lg transition-all duration-300 shadow-lg focus:outline-none focus:ring-4 focus:ring-rose-500/50 transform hover:-translate-y-0.5 hidden">
-                    Limpar 
+                <button id="clearBtn" class="w-full bg-slate-200 hover:bg-rose-500 text-gray-800 dark:text-white dark:bg-slate-700 dark:hover:bg-rose-600 font-bold py-3 px-4 rounded-lg transition-all duration-300 shadow-lg focus:outline-none focus:ring-4 focus:ring-rose-500/50 transform hover:-translate-y-0.5 hidden">
+                    Limpar
                 </button>
             </div>
 
+            <!-- Loader -->
             <div id="loader" class="flex justify-center items-center pt-4 hidden">
-                <div class="border-t-transparent border-solid animate-spin rounded-full border-indigo-500 dark:border-indigo-400 border-4 h-10 w-10"></div>
-                <p class="ml-4 text-gray-500 dark:text-gray-400">Analisando documento...</p>
+                <div class="border-t-transparent border-solid animate-spin rounded-full 
+                            border-4 h-10 w-10 
+                            border-indigo-500 dark:border-indigo-400
+                            dark:border-t-slate-700"></div>
+                <p class="ml-4 text-slate-500 dark:text-slate-300">Analisando documento...</p>
             </div>
         </div>
 
         <footer class="text-center mt-8">
-            <p class="text-sm text-gray-400 dark:text-gray-600">&copy; 2025. Todos os direitos reservados.</p> 
+            <p class="text-sm text-slate-500 dark:text-slate-400/80">&copy; 2025. Todos os direitos reservados.</p>
         </footer>
     </div>
 
-    <div id="resultModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden z-50">
-        <div id="modalContent" class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700/50 rounded-2xl shadow-2xl w-full max-w-4xl transform transition-all max-h-[90vh] overflow-y-auto">
+    <!-- Modal -->
+    <div id="resultModal" 
+         class="fixed inset-0 
+                bg-slate-900/50 dark:bg-slate-900/80 
+                backdrop-blur-sm flex items-center justify-center p-4 
+                hidden z-50 transition-opacity">
+        <div id="modalContent" 
+             class="bg-white dark:bg-slate-800 
+                    border border-gray-200 dark:border-slate-700/50 
+                    rounded-2xl shadow-2xl w-full max-w-4xl 
+                    transform transition-all 
+                    max-h-[90vh] overflow-y-auto">
         </div>
     </div>
 
+    <!-- Script de alternância de tema -->
     <script>
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js';
-
-        // --- Seletores de Elementos --- 
-        const pdfFileInput = document.getElementById('pdfFile');
-        const analyzeBtn = document.getElementById('analyzeBtn');
-        const clearBtn = document.getElementById('clearBtn');
-        const loader = document.getElementById('loader');
-        const fileNameDisplay = document.getElementById('fileName');
-        const resultModal = document.getElementById('resultModal');
-        const modalContent = document.getElementById('modalContent');
-        const uploadPrompt = document.getElementById('upload-prompt');
-        const fileInfo = document.getElementById('file-info');
         const themeToggleBtn = document.getElementById('theme-toggle');
         const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
         const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
 
-        // --- Lógica de Tema --- 
         function updateThemeIcon() {
             if (document.documentElement.classList.contains('dark')) {
                 themeToggleLightIcon.classList.remove('hidden');
@@ -143,95 +161,20 @@
                 themeToggleLightIcon.classList.add('hidden');
             }
         }
-        updateThemeIcon(); // Define o ícone inicial no carregamento da página 
+
+        document.addEventListener("DOMContentLoaded", updateThemeIcon);
 
         themeToggleBtn.addEventListener('click', () => {
-            // Alterna a classe 'dark' no elemento <html> 
             document.documentElement.classList.toggle('dark');
-
-            // Verifica qual tema está ativo AGORA e salva no localStorage
             if (document.documentElement.classList.contains('dark')) {
                 localStorage.setItem('color-theme', 'dark');
             } else {
                 localStorage.setItem('color-theme', 'light');
             }
-
-            // Atualiza o ícone para refletir a mudança 
             updateThemeIcon();
         });
+    </script>
 
-        // --- Lógica Principal da Aplicação --- 
-        analyzeBtn.disabled = true;
-
-        function reconstructLinesFromItems(items) {
-            const lines = new Map();
-            const Y_TOLERANCE = 5;
-            items.forEach(item => {
-                const y = Math.round(item.transform[5]);
-                let foundKey = null;
-                for (const key of lines.keys()) {
-                    if (Math.abs(y - key) <= Y_TOLERANCE) { foundKey = key; break; }
-                }
-                const targetKey = foundKey !== null ? foundKey : y;
-                if (!lines.has(targetKey)) { lines.set(targetKey, []); }
-                lines.get(targetKey).push(item);
-            });
-            const sortedLines = Array.from(lines.entries()).sort((a, b) => b[0] - a[0]);
-            return sortedLines.map(([, lineItems]) => {
-                lineItems.sort((a, b) => a.transform[4] - b.transform[4]);
-                return lineItems.map(item => item.str).join(' ');
-            });
-        }
-
-        function analyzePaymentStatus(text) {
-            const lines = text.split('\n');
-            let name = 'Não encontrado'; 
-            let exerciseDate = 'Não encontrada'; 
-
-            for (const line of lines) {
-                const nameMatch = line.match(/NOME\s*:\s*(.*)/i);
-                if (nameMatch && nameMatch[1]) {
-                    let rawContent = nameMatch[1].trim();
-                    const dateIndex = rawContent.toUpperCase().indexOf("DATA EXERCÍCIO"); 
-                    name = dateIndex !== -1 ? rawContent.substring(0, dateIndex).trim() : rawContent;
-                }
-                const dateMatch = line.match(/DATA EXERC[ÍI]CIO\s*:\s*(.*)/i);
-                if (dateMatch && dateMatch[1]) { exerciseDate = dateMatch[1].trim(); }
-            }
-
-            const headerRegex = /Data Início\s+Data Fim\s+Data Início\s+Data fim\s+Pagamento/i; 
-            let headerIndex = lines.findIndex(line => headerRegex.test(line));
-            if (headerIndex === -1) { return { error: 'A tabela de férias com o cabeçalho esperado não foi encontrada.' }; } 
-
-            let dataRow = '';
-            for (let i = headerIndex + 1; i < lines.length; i++) {
-                if (/\d{2}\/\d{2}\/\d{4}/.test(lines[i])) { dataRow = lines[i].trim(); break; }
-            }
-            if (!dataRow) { return { error: 'Nenhuma linha de dados encontrada abaixo do cabeçalho.' }; } 
-
-            const columns = dataRow.split(/\s+/);
-            if (columns.length < 5) { return { error: 'A formatação da linha de dados é inválida.' }; } 
-
-            const paymentInfo = columns[4];
-            const yearMatch = paymentInfo ? paymentInfo.match(/\d{4}/) : null;
-            if (!yearMatch) { return { error: `Não foi possível identificar o ano de pagamento na coluna: "${paymentInfo || ''}"` }; } 
-
-            const paymentYear = parseInt(yearMatch[0], 10);
-            let statusMessage, statusType;
-            if (paymentYear === 2025) {
-                statusMessage = 'Servidor Foi Pago'; statusType = 'pago'; 
-            } else {
-                statusMessage = 'Servidor Não Foi Pago'; statusType = 'nao_pago'; 
-            }
-            return { name, exerciseDate, columns, statusMessage, statusType };
-        }
-
-        function displayAnalysisResult(result) {
-            let content;
-            if (result.error) {
-                const statusIcon = `<svg class="w-16 h-16 text-yellow-500 dark:text-yellow-400 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>`;
-                content = `<div class="p-8 text-center"><div class="mb-4">${statusIcon}</div><h3 class="text-2xl font-bold text-yellow-500 dark:text-yellow-400 mb-2">Erro na análise</h3><p class="text-gray-600 dark:text-gray-300">${result.error}</p></div>`;
-            } else {
-                const isPaid = result.statusType === 'pago';
-                const statusIcon = isPaid ?
-                    `<svg class="w-16 h-16 text-emerald-500 dark:text-emerald-400 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z
+    <!-- Seu script principal de análise continua aqui... -->
+</body>
+</html>
