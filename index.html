@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Analisador de Pagamentos de Férias</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -12,89 +12,75 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
 
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
+    <script>
+        // Configuração do Tailwind para modo escuro
+        tailwind.config = {
+            darkMode: 'class',
         }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+
+        /* Estilos de gradiente para ambos os temas */
         .animated-gradient-background {
-            background: linear-gradient(-45deg, #111827, #1f2937, #374151);
+            background: linear-gradient(-45deg, #f3f4f6, #e5e7eb, #d1d5db);
             background-size: 400% 400%;
             animation: gradient 15s ease infinite;
         }
+        .dark .animated-gradient-background {
+             background: linear-gradient(-45deg, #111827, #1f2937, #374151);
+             background-size: 400% 400%;
+        }
+
         @keyframes gradient {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
-        #resultModal {
-            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-        }
+
+        #resultModal { transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out; }
     </style>
+
+    <!-- Inicializa o tema ANTES da renderização para evitar flash -->
     <script>
-        // Define tema inicial antes do render
-        if (localStorage.getItem('color-theme') === 'dark' ||
-            (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      (function() {
+        try {
+          const stored = localStorage.getItem('color-theme');
+          const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          if (stored === 'dark' || (stored === null && prefersDark)) {
             document.documentElement.classList.add('dark');
-        } else {
+          } else {
             document.documentElement.classList.remove('dark');
+          }
+        } catch (e) {
+          // Se o localStorage estiver bloqueado, mantém o comportamento padrão
         }
+      })();
     </script>
 </head>
-<body class="bg-slate-100 dark:bg-slate-900 text-gray-900 dark:text-gray-200 flex items-center justify-center min-h-screen p-4 transition-colors duration-300">
+<body class="text-gray-800 dark:text-gray-200 flex items-center justify-center min-h-screen p-4 animated-gradient-background transition-colors duration-500">
 
-    <!-- Botão de alternar tema -->
-    <button id="theme-toggle" type="button" 
-        class="absolute top-4 right-4 text-gray-500 dark:text-gray-400 hover:bg-slate-200 dark:hover:bg-slate-700 focus:outline-none focus:ring-4 focus:ring-slate-200 dark:focus:ring-slate-700 rounded-lg text-sm p-2.5">
-        <!-- Ícone Lua -->
-        <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"/>
-        </svg>
-        <!-- Ícone Sol -->
-        <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" clip-rule="evenodd"
-                d="M10 2a1 1 0 011 1v1a1 1 0 11-2 
-                0V3a1 1 0 011-1zm4 8a4 4 0 11-8 
-                0 4 4 0 018 0zm-.464 4.95l.707.707a1 
-                1 0 001.414-1.414l-.707-.707a1 1 
-                0 00-1.414 1.414zm2.12-10.607a1 1 
-                0 010 1.414l-.706.707a1 1 0 
-                11-1.414-1.414l.707-.707a1 1 
-                0 011.414 0zM17 11a1 1 0 100-2h-1a1 
-                1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 
-                0 11-2 0v-1a1 1 0 011-1zM5.05 
-                6.464A1 1 0 106.465 5.05l-.708-.707a1 
-                1 0 00-1.414 1.414l.707.707zm1.414 
-                8.486a1 1 0 01-1.414 
-                0l-.707-.707a1 1 0 011.414-1.414l.707.707zM4 
-                11a1 1 0 100-2H3a1 1 0 000 2h1z"/>
-        </svg>
-    </button>
+    <div class="absolute top-4 right-4 z-10">
+        <button id="theme-toggle" type="button" class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5">
+            <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.121-3.536a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM10 18a1 1 0 011-1v-1a1 1 0 11-2 0v1a1 1 0 011 1zM5.05 14.464A1 1 0 106.465 13.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zm1.414-9.9l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM16 10a1 1 0 01-1-1h-1a1 1 0 110-2h1a1 1 0 011 1zM4 10a1 1 0 01-1-1H2a1 1 0 110-2h1a1 1 0 011 1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+        </button>
+    </div>
 
-    <!-- Conteúdo principal -->
     <div class="w-full max-w-2xl mx-auto">
-        <div class="bg-white dark:bg-slate-800 backdrop-blur-xl border border-gray-200 dark:border-slate-700/50 rounded-2xl shadow-lg dark:shadow-2xl p-6 sm:p-8 space-y-8">
-            <!-- Cabeçalho -->
+         <div class="bg-white/70 dark:bg-gray-900/50 backdrop-blur-xl border border-gray-200/50 dark:border-gray-700/50 rounded-2xl shadow-2xl p-6 sm:p-8 space-y-8">
             <div class="text-center">
                 <div class="flex justify-center items-center mb-4">
-                    <svg class="w-10 h-10 text-indigo-500 dark:text-indigo-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                    </svg>
+                    <svg class="w-10 h-10 text-indigo-500 dark:text-indigo-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
                 </div>
-                <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-transparent dark:bg-clip-text dark:bg-gradient-to-r dark:from-indigo-400 dark:to-purple-500 mb-2">
-                    Analisador de Pagamentos
-                </h1>
-                <p class="text-gray-500 dark:text-gray-400">
-                    Extraia e verifique o status de pagamento de férias a partir de um PDF.
-                </p>
+                <h1 class="text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-600 dark:from-indigo-400 dark:to-purple-500 mb-2">Analisador de Pagamentos</h1>
+                <p class="text-gray-600 dark:text-gray-400">Extraia e verifique o status de pagamento de férias a partir de um PDF.</p>
             </div>
 
-            <!-- Upload -->
             <div class="space-y-4">
                 <label for="pdfFile" class="flex flex-col items-center justify-center w-full h-40 border-2 border-gray-300 dark:border-slate-600/50 border-dashed rounded-xl cursor-pointer bg-slate-50 dark:bg-slate-700/50 hover:border-indigo-500 dark:hover:border-indigo-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-all duration-300">
                     <div id="upload-prompt" class="flex flex-col items-center justify-center text-center">
-                        <svg class="w-10 h-10 mb-4 text-gray-400 dark:text-slate-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
-                        </svg>
+                        <svg class="w-10 h-10 mb-4 text-gray-400 dark:text-slate-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/></svg>
                         <p class="mb-2 text-sm text-slate-500 dark:text-slate-400"><span class="font-semibold text-indigo-500 dark:text-indigo-400">Clique para enviar</span> ou arraste e solte</p>
                         <p class="text-xs text-gray-400 dark:text-slate-500">Apenas arquivos PDF</p>
                     </div>
@@ -106,22 +92,13 @@
                 </label>
             </div>
 
-            <!-- Botões -->
             <div class="flex flex-col sm:flex-row gap-4">
-                <button id="analyzeBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 dark:hover:bg-indigo-500 disabled:bg-slate-400 dark:disabled:bg-slate-600 disabled:cursor-not-allowed text-white font-bold py-3 px-4 rounded-lg transition-all duration-300 shadow-lg shadow-indigo-500/30 dark:shadow-indigo-900/50 focus:outline-none focus:ring-4 focus:ring-indigo-500/50 transform hover:-translate-y-0.5">
-                    Analisar Pagamento
-                </button>
-                <button id="clearBtn" class="w-full bg-slate-200 hover:bg-rose-500 text-gray-800 dark:text-white dark:bg-slate-700 dark:hover:bg-rose-600 font-bold py-3 px-4 rounded-lg transition-all duration-300 shadow-lg focus:outline-none focus:ring-4 focus:ring-rose-500/50 transform hover:-translate-y-0.5 hidden">
-                    Limpar
-                </button>
+                <button id="analyzeBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 dark:hover:bg-indigo-500 disabled:bg-slate-400 dark:disabled:bg-slate-600 disabled:cursor-not-allowed text-white font-bold py-3 px-4 rounded-lg transition-all duration-300 shadow-lg shadow-indigo-500/30 dark:shadow-indigo-900/50 focus:outline-none focus:ring-4 focus:ring-indigo-500/50 transform hover:-translate-y-0.5" disabled>Analisar Pagamento</button>
+                <button id="clearBtn" class="w-full bg-slate-200 hover:bg-rose-500 text-gray-800 dark:text-white dark:bg-slate-700 dark:hover:bg-rose-600 font-bold py-3 px-4 rounded-lg transition-all duration-300 shadow-lg focus:outline-none focus:ring-4 focus:ring-rose-500/50 transform hover:-translate-y-0.5 hidden">Limpar</button>
             </div>
 
-            <!-- Loader -->
             <div id="loader" class="flex justify-center items-center pt-4 hidden">
-                <div class="border-t-transparent border-solid animate-spin rounded-full 
-                            border-4 h-10 w-10 
-                            border-indigo-500 dark:border-indigo-400
-                            dark:border-t-slate-700"></div>
+                <div class="border-t-transparent border-solid animate-spin rounded-full border-4 h-10 w-10 border-indigo-500 dark:border-indigo-400 dark:border-t-slate-700" role="status" aria-hidden="true"></div>
                 <p class="ml-4 text-slate-500 dark:text-slate-300">Analisando documento...</p>
             </div>
         </div>
@@ -131,50 +108,229 @@
         </footer>
     </div>
 
-    <!-- Modal -->
-    <div id="resultModal" 
-         class="fixed inset-0 
-                bg-slate-900/50 dark:bg-slate-900/80 
-                backdrop-blur-sm flex items-center justify-center p-4 
-                hidden z-50 transition-opacity">
-        <div id="modalContent" 
-             class="bg-white dark:bg-slate-800 
-                    border border-gray-200 dark:border-slate-700/50 
-                    rounded-2xl shadow-2xl w-full max-w-4xl 
-                    transform transition-all 
-                    max-h-[90vh] overflow-y-auto">
+    <div id="resultModal" class="fixed inset-0 bg-gray-900/50 dark:bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden z-50 transition-opacity">
+        <div id="modalContent" class="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700/50 rounded-2xl shadow-2xl w-full max-w-4xl transform transition-all max-h-[90vh] overflow-y-auto">
         </div>
     </div>
 
-    <!-- Script de alternância de tema -->
     <script>
-        const themeToggleBtn = document.getElementById('theme-toggle');
-        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
-        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js';
 
+    // --- LÓGICA ROBUSTA PARA ALTERNAR TEMA ---
+    (function() {
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const darkIcon = document.getElementById('theme-toggle-dark-icon');
+        const lightIcon = document.getElementById('theme-toggle-light-icon');
+
+        // Função para atualizar o ícone baseado no tema atual
         function updateThemeIcon() {
             if (document.documentElement.classList.contains('dark')) {
-                themeToggleLightIcon.classList.remove('hidden');
-                themeToggleDarkIcon.classList.add('hidden');
+                lightIcon.classList.remove('hidden');
+                darkIcon.classList.add('hidden');
             } else {
-                themeToggleDarkIcon.classList.remove('hidden');
-                themeToggleLightIcon.classList.add('hidden');
+                darkIcon.classList.remove('hidden');
+                lightIcon.classList.add('hidden');
             }
         }
 
-        document.addEventListener("DOMContentLoaded", updateThemeIcon);
+        // Garante que o ícone correto seja exibido ao carregar
+        updateThemeIcon();
 
+        // Adiciona o evento de clique para alternar o tema
         themeToggleBtn.addEventListener('click', () => {
-            document.documentElement.classList.toggle('dark');
-            if (document.documentElement.classList.contains('dark')) {
-                localStorage.setItem('color-theme', 'dark');
-            } else {
-                localStorage.setItem('color-theme', 'light');
-            }
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('color-theme', isDark ? 'dark' : 'light');
             updateThemeIcon();
         });
-    </script>
+    })();
 
-    <!-- Seu script principal de análise continua aqui... -->
+
+    // --- Funções da aplicação ---
+    function reconstructLinesFromItems(items) {
+        const lines = new Map();
+        const Y_TOLERANCE = 5;
+        items.forEach(item => {
+            const y = Math.round(item.transform[5]);
+            let foundKey = null;
+            for (const key of lines.keys()) {
+                if (Math.abs(y - key) <= Y_TOLERANCE) { foundKey = key; break; }
+            }
+            const targetKey = foundKey !== null ? foundKey : y;
+            if (!lines.has(targetKey)) { lines.set(targetKey, []); }
+            lines.get(targetKey).push(item);
+        });
+        const sortedLines = Array.from(lines.entries()).sort((a, b) => b[0] - a[0]);
+        return sortedLines.map(([, lineItems]) => {
+            lineItems.sort((a, b) => a.transform[4] - b.transform[4]);
+            return lineItems.map(item => item.str).join(' ');
+        });
+    }
+
+    function analyzePaymentStatus(text) {
+        const lines = text.split('\n');
+        let name = 'Não encontrado';
+        let exerciseDate = 'Não encontrada';
+
+        for (const line of lines) {
+            const nameMatch = line.match(/NOME\s*:\s*(.*)/i);
+            if (nameMatch && nameMatch[1]) {
+                let rawContent = nameMatch[1].trim();
+                const dateIndex = rawContent.toUpperCase().indexOf("DATA EXERCÍCIO");
+                name = dateIndex !== -1 ? rawContent.substring(0, dateIndex).trim() : rawContent;
+            }
+            const dateMatch = line.match(/DATA EXERC[ÍI]CIO\s*:\s*(.*)/i);
+            if (dateMatch && dateMatch[1]) { exerciseDate = dateMatch[1].trim(); }
+        }
+
+        const headerRegex = /Data Início\s+Data Fim\s+Data Início\s+Data fim\s+Pagamento/i;
+        let headerIndex = lines.findIndex(line => headerRegex.test(line));
+        if (headerIndex === -1) { return { error: 'A tabela de férias com o cabeçalho esperado não foi encontrada.' }; }
+
+        let dataRow = '';
+        for (let i = headerIndex + 1; i < lines.length; i++) {
+            if (/\d{2}\/\d{2}\/\d{4}/.test(lines[i])) { dataRow = lines[i].trim(); break; }
+        }
+        if (!dataRow) { return { error: 'Nenhuma linha de dados encontrada abaixo do cabeçalho.' }; }
+
+        const columns = dataRow.split(/\s+/);
+        if (columns.length < 5) { return { error: 'A formatação da linha de dados é inválida.' }; }
+
+        const paymentInfo = columns[4];
+        const yearMatch = paymentInfo ? paymentInfo.match(/\d{4}/) : null;
+        if (!yearMatch) { return { error: `Não foi possível identificar o ano de pagamento na coluna: "${paymentInfo || ''}"` }; }
+
+        const paymentYear = parseInt(yearMatch[0], 10);
+        let statusMessage, statusType;
+        if (paymentYear === 2025) {
+            statusMessage = 'Servidor Foi Pago'; statusType = 'pago';
+        } else {
+            statusMessage = 'Servidor Não Foi Pago'; statusType = 'nao_pago';
+        }
+        return { name, exerciseDate, columns, statusMessage, statusType };
+    }
+
+    function displayAnalysisResult(result) {
+        const modalContent = document.getElementById('modalContent');
+        const resultModal = document.getElementById('resultModal');
+
+        let html = '';
+        if (result.error) {
+            const statusIcon = `<svg class="w-16 h-16 text-yellow-500 dark:text-yellow-400 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>`;
+            html = `<div class="p-8 text-center"><div class="mb-4">${statusIcon}</div><h3 class="text-2xl font-bold text-yellow-500 dark:text-yellow-400 mb-2">Erro na Análise</h3><p class="text-slate-600 dark:text-slate-300">${result.error}</p></div>`;
+        } else {
+            const isPaid = result.statusType === 'pago';
+            const statusIcon = isPaid ?
+                `<svg class="w-16 h-16 text-emerald-500 dark:text-emerald-400 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>` :
+                `<svg class="w-16 h-16 text-rose-500 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`;
+            const statusColor = isPaid ? 'text-emerald-500 dark:text-emerald-400' : 'text-rose-500 dark:text-rose-400';
+            const statusBgColor = isPaid ? 'bg-emerald-50 dark:bg-emerald-500/10' : 'bg-rose-50 dark:bg-rose-500/10';
+            const headers = ['Início Aquis.', 'Fim Aquis.', 'Início Férias', 'Fim Férias', 'Pagamento', 'Valor', 'Tipo', 'Perc', 'Dias'];
+            const tableRows = `<tr class="border-b border-gray-200 dark:border-gray-700/50">${result.columns.map((col, i) => `<td class="p-3 whitespace-nowrap">${headers[i] ? col : ''}</td>`).join('')}</tr>`;
+
+            html = `
+                <div class="relative p-6 sm:p-8">
+                    <button id="closeModalBtn" class="absolute top-4 right-4 text-slate-400 hover:text-slate-800 dark:text-slate-500 dark:hover:text-white transition z-10" aria-label="Fechar modal">
+                        <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                    <div class="text-center mb-6">${statusIcon}</div>
+                    <h3 class="text-3xl font-bold ${statusColor} text-center mb-6">${result.statusMessage}</h3>
+                    <div class="bg-slate-50 dark:bg-slate-900/70 px-6 sm:px-8 py-5 border-y border-gray-200 dark:border-slate-700/50">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <p class="text-sm font-semibold text-indigo-600 dark:text-indigo-400 mb-1">NOME DO SERVIDOR</p>
+                                <p class="text-lg font-medium text-slate-800 dark:text-white">${result.name}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-semibold text-indigo-600 dark:text-indigo-400 mb-1">DATA DE EXERCÍCIO</p>
+                                <p class="text-lg font-medium text-slate-800 dark:text-white">${result.exerciseDate}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="${statusBgColor} p-6 sm:p-8">
+                        <p class="text-base font-semibold text-slate-700 dark:text-slate-300 mb-3">Detalhes do Último Lançamento</p>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm">
+                                <thead class="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider">${headers.map(h => `<th class="p-3 font-semibold whitespace-nowrap">${h}</th>`).join('')}</thead>
+                                <tbody class="text-slate-800 dark:text-white">${tableRows}</tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>`;
+        }
+        modalContent.innerHTML = html;
+
+        // Adiciona o handler do botão de fechar após o conteúdo ser inserido
+        const closeBtn = document.getElementById('closeModalBtn');
+        if (closeBtn) closeBtn.addEventListener('click', hideModal);
+
+        resultModal.classList.remove('hidden');
+        resultModal.addEventListener('click', (e) => { if (e.target === resultModal) hideModal(); });
+    }
+
+    function hideModal() {
+        const resultModal = document.getElementById('resultModal');
+        resultModal.classList.add('hidden');
+    }
+
+    const pdfFileInput = document.getElementById('pdfFile');
+    const analyzeBtn = document.getElementById('analyzeBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const loader = document.getElementById('loader');
+    const fileNameDisplay = document.getElementById('fileName');
+
+    pdfFileInput.addEventListener('change', () => {
+        hideModal();
+        if (pdfFileInput.files.length > 0) {
+            const file = pdfFileInput.files[0];
+            fileNameDisplay.textContent = file.name;
+            document.getElementById('upload-prompt').classList.add('hidden');
+            document.getElementById('file-info').classList.remove('hidden', 'flex');
+            document.getElementById('file-info').classList.add('flex');
+            clearBtn.classList.remove('hidden');
+            analyzeBtn.disabled = false;
+        } else {
+            clearBtn.click();
+        }
+    });
+
+    analyzeBtn.addEventListener('click', async () => {
+        const file = pdfFileInput.files[0];
+        if (!file) return;
+        loader.classList.remove('hidden');
+        analyzeBtn.disabled = true;
+        clearBtn.disabled = true;
+        try {
+            const fileBuffer = await file.arrayBuffer();
+            const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(fileBuffer) }).promise;
+            let allLines = [];
+            for (let i = 1; i <= pdf.numPages; i++) {
+                const page = await pdf.getPage(i);
+                const textContent = await page.getTextContent();
+                allLines.push(...reconstructLinesFromItems(textContent.items));
+            }
+            const fullText = allLines.join('\n');
+            const analysis = analyzePaymentStatus(fullText);
+            displayAnalysisResult(analysis);
+        } catch (error) {
+            console.error('Erro ao processar o PDF:', error);
+            displayAnalysisResult({ error: 'O arquivo parece ser um PDF inválido ou corrompido.' });
+        } finally {
+            loader.classList.add('hidden');
+            analyzeBtn.disabled = false;
+            clearBtn.disabled = false;
+        }
+    });
+
+    clearBtn.addEventListener('click', () => {
+        pdfFileInput.value = '';
+        fileNameDisplay.textContent = '';
+        document.getElementById('file-info').classList.add('hidden');
+        document.getElementById('file-info').classList.remove('flex');
+        document.getElementById('upload-prompt').classList.remove('hidden');
+        clearBtn.classList.add('hidden');
+        analyzeBtn.disabled = true;
+        hideModal();
+    });
+    </script>
 </body>
 </html>
