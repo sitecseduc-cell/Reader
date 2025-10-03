@@ -22,7 +22,7 @@ Responsividade: A interface é totalmente adaptável para uso em diferentes disp
 🚀 Como Usar
 Para utilizar a ferramenta, siga os passos abaixo:
 
-Abra o navegador e insira a URL: https://ticker-ccm.vercel.app/
+Abra o navegador e insira a URL: https://reader-tau-azure.vercel.app/)
 
 Clique na área indicada ou arraste e solte um arquivo PDF para a caixa de upload.
 
