@@ -21,8 +21,6 @@
     </script>
     <style>
         body { font-family: 'Inter', sans-serif; }
-
-        /* Estilos de gradiente para ambos os temas */
         .animated-gradient-background {
             background: linear-gradient(-45deg, #f3f4f6, #e5e7eb, #d1d5db);
             background-size: 400% 400%;
@@ -32,17 +30,13 @@
              background: linear-gradient(-45deg, #111827, #1f2937, #374151);
              background-size: 400% 400%;
         }
-
         @keyframes gradient {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
-
         #resultModal { transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out; }
     </style>
-
-    <!-- Inicializa o tema ANTES da renderização para evitar flash -->
     <script>
       (function() {
         try {
@@ -53,9 +47,7 @@
           } else {
             document.documentElement.classList.remove('dark');
           }
-        } catch (e) {
-          // Se o localStorage estiver bloqueado, mantém o comportamento padrão
-        }
+        } catch (e) {}
       })();
     </script>
 </head>
@@ -65,16 +57,8 @@
         <button id="theme-toggle" type="button" class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5">
                 <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
                 <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="5"></circle>
-                    <line x1="12" y1="1" x2="12" y2="3"></line>
-                    <line x1="12" y1="21" x2="12" y2="23"></line>
-                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                    <line x1="1" y1="12" x2="3" y2="12"></line>
-                    <line x1="21" y1="12" x2="23" y2="12"></line>
-                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                </svg> 
+                    <circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
         </button>
     </div>
 
@@ -85,7 +69,7 @@
                     <img src="https://i.ibb.co/932Mzz8w/SITECicone.png" alt="Logo Sitec" class="logo" style="width: 70px; height: 70px;">
                 </div>
                 <h1 class="text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-600 dark:from-indigo-400 dark:to-purple-500 mb-2">Analisador de Pagamentos</h1>
-                <p class="text-gray-600 dark:text-gray-400">Extraia e verifique o status de pagamento de férias a partir de um PDF.</p>
+                <p class="text-gray-600 dark:text-gray-400">Extraia e verifique o status de pagamento de férias a partir de um PDF ou TXT.</p>
             </div>
 
             <div class="space-y-4">
@@ -93,14 +77,19 @@
                     <div id="upload-prompt" class="flex flex-col items-center justify-center text-center">
                         <svg class="w-10 h-10 mb-4 text-gray-400 dark:text-slate-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/></svg>
                         <p class="mb-2 text-sm text-slate-500 dark:text-slate-400"><span class="font-semibold text-indigo-500 dark:text-indigo-400">Clique para enviar</span> ou arraste e solte</p>
-                        <p class="text-xs text-gray-400 dark:text-slate-500">Apenas arquivos PDF</p>
+                        <p class="text-xs text-gray-400 dark:text-slate-500">Arquivos PDF ou TXT</p>
                     </div>
                     <div id="file-info" class="hidden flex-col items-center justify-center text-center">
                         <p class="text-lg font-medium text-cyan-600 dark:text-cyan-400">Arquivo Selecionado:</p>
                         <p id="fileName" class="mt-2 text-sm bg-slate-200 dark:bg-slate-700/50 text-slate-700 dark:text-slate-300 py-1 px-3 rounded-full"></p>
                     </div>
-                    <input id="pdfFile" type="file" class="hidden" accept=".pdf" />
+                    <input id="pdfFile" type="file" class="hidden" accept=".pdf, .txt" />
                 </label>
+            </div>
+
+            <div>
+                <label for="referenceYear" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ano de Referência para Pagamento</label>
+                <input type="number" id="referenceYear" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Padrão: ano atual" min="1900" max="2100">
             </div>
 
             <div class="flex flex-col sm:flex-row gap-4">
@@ -127,13 +116,10 @@
     <script>
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js';
 
-    // --- LÓGICA ROBUSTA PARA ALTERNAR TEMA ---
     (function() {
         const themeToggleBtn = document.getElementById('theme-toggle');
         const darkIcon = document.getElementById('theme-toggle-dark-icon');
         const lightIcon = document.getElementById('theme-toggle-light-icon');
-
-        // Função para atualizar o ícone baseado no tema atual
         function updateThemeIcon() {
             if (document.documentElement.classList.contains('dark')) {
                 lightIcon.classList.remove('hidden');
@@ -143,11 +129,7 @@
                 lightIcon.classList.add('hidden');
             }
         }
-
-        // Garante que o ícone correto seja exibido ao carregar
         updateThemeIcon();
-
-        // Adiciona o evento de clique para alternar o tema
         themeToggleBtn.addEventListener('click', () => {
             const isDark = document.documentElement.classList.toggle('dark');
             localStorage.setItem('color-theme', isDark ? 'dark' : 'light');
@@ -155,8 +137,6 @@
         });
     })();
 
-
-    // --- Funções da aplicação ---
     function reconstructLinesFromItems(items) {
         const lines = new Map();
         const Y_TOLERANCE = 5;
@@ -177,12 +157,14 @@
         });
     }
 
-    function analyzePaymentStatus(text) {
+    // --- ALTERAÇÃO: Função de análise atualizada ---
+    function analyzePaymentStatus(text, referenceYear) {
         const lines = text.split('\n');
-        let name = 'Não encontrado';
-        let exerciseDate = 'Não encontrada';
+        let name = null;
+        let exerciseDate = null;
 
         for (const line of lines) {
+            // Procura por NOME e DATA EXERCÍCIO na mesma linha ou em linhas separadas
             const nameMatch = line.match(/NOME\s*:\s*(.*)/i);
             if (nameMatch && nameMatch[1]) {
                 let rawContent = nameMatch[1].trim();
@@ -193,29 +175,37 @@
             if (dateMatch && dateMatch[1]) { exerciseDate = dateMatch[1].trim(); }
         }
 
+        // --- ALTERAÇÃO: Tratamento de erro melhorado ---
+        if (!name) return { error: 'O campo "NOME" do servidor não foi encontrado no documento.' };
+        if (!exerciseDate) return { error: 'O campo "DATA EXERCÍCIO" não foi encontrado no documento.' };
+
         const headerRegex = /Data Início\s+Data Fim\s+Data Início\s+Data fim\s+Pagamento/i;
         let headerIndex = lines.findIndex(line => headerRegex.test(line));
-        if (headerIndex === -1) { return { error: 'A tabela de férias com o cabeçalho esperado não foi encontrada.' }; }
+        if (headerIndex === -1) { return { error: 'A tabela de férias com o cabeçalho "Data Início Data Fim..." não foi encontrada.' }; }
 
         let dataRow = '';
         for (let i = headerIndex + 1; i < lines.length; i++) {
             if (/\d{2}\/\d{2}\/\d{4}/.test(lines[i])) { dataRow = lines[i].trim(); break; }
         }
-        if (!dataRow) { return { error: 'Nenhuma linha de dados encontrada abaixo do cabeçalho.' }; }
+        if (!dataRow) { return { error: 'Nenhuma linha de dados com datas foi encontrada abaixo do cabeçalho da tabela.' }; }
 
         const columns = dataRow.split(/\s+/);
-        if (columns.length < 5) { return { error: 'A formatação da linha de dados é inválida.' }; }
+        if (columns.length < 5) { return { error: `A formatação da linha de dados é inválida. Esperava-se pelo menos 5 colunas, mas foram encontradas ${columns.length}.` }; }
 
         const paymentInfo = columns[4];
-        const yearMatch = paymentInfo ? paymentInfo.match(/\d{4}/) : null;
-        if (!yearMatch) { return { error: `Não foi possível identificar o ano de pagamento na coluna: "${paymentInfo || ''}"` }; }
+        if (!paymentInfo) return { error: 'A coluna de "Pagamento" parece estar vazia.'};
+        
+        const yearMatch = paymentInfo.match(/\d{4}/);
+        if (!yearMatch) { return { error: `Não foi possível identificar o ano de pagamento na coluna: "${paymentInfo}"` }; }
 
         const paymentYear = parseInt(yearMatch[0], 10);
         let statusMessage, statusType;
-        if (paymentYear === 2025) {
-            statusMessage = 'Servidor Foi Pago'; statusType = 'pago';
+
+        // --- ALTERAÇÃO: Lógica de pagamento flexível ---
+        if (paymentYear === referenceYear) {
+            statusMessage = `Servidor Foi Pago (Ref. ${referenceYear})`; statusType = 'pago';
         } else {
-            statusMessage = 'Servidor Não Foi Pago'; statusType = 'nao_pago';
+            statusMessage = `Servidor Não Foi Pago (Ref. ${referenceYear})`; statusType = 'nao_pago';
         }
         return { name, exerciseDate, columns, statusMessage, statusType };
     }
@@ -269,18 +259,14 @@
                 </div>`;
         }
         modalContent.innerHTML = html;
-
-        // Adiciona o handler do botão de fechar após o conteúdo ser inserido
         const closeBtn = document.getElementById('closeModalBtn');
         if (closeBtn) closeBtn.addEventListener('click', hideModal);
-
         resultModal.classList.remove('hidden');
         resultModal.addEventListener('click', (e) => { if (e.target === resultModal) hideModal(); });
     }
 
     function hideModal() {
-        const resultModal = document.getElementById('resultModal');
-        resultModal.classList.add('hidden');
+        document.getElementById('resultModal').classList.add('hidden');
     }
 
     const pdfFileInput = document.getElementById('pdfFile');
@@ -288,6 +274,8 @@
     const clearBtn = document.getElementById('clearBtn');
     const loader = document.getElementById('loader');
     const fileNameDisplay = document.getElementById('fileName');
+    // NOVO: Referência ao campo de ano
+    const referenceYearInput = document.getElementById('referenceYear');
 
     pdfFileInput.addEventListener('change', () => {
         hideModal();
@@ -304,27 +292,44 @@
         }
     });
 
+    // --- ALTERAÇÃO: Lógica de análise principal atualizada ---
     analyzeBtn.addEventListener('click', async () => {
         const file = pdfFileInput.files[0];
         if (!file) return;
+
+        // Pega o ano de referência do input ou usa o ano atual como padrão
+        const referenceYear = referenceYearInput.valueAsNumber || new Date().getFullYear();
+
         loader.classList.remove('hidden');
         analyzeBtn.disabled = true;
         clearBtn.disabled = true;
+
         try {
-            const fileBuffer = await file.arrayBuffer();
-            const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(fileBuffer) }).promise;
-            let allLines = [];
-            for (let i = 1; i <= pdf.numPages; i++) {
-                const page = await pdf.getPage(i);
-                const textContent = await page.getTextContent();
-                allLines.push(...reconstructLinesFromItems(textContent.items));
+            let fullText = '';
+            // Verifica o tipo de arquivo para decidir como processá-lo
+            if (file.type === 'application/pdf') {
+                const fileBuffer = await file.arrayBuffer();
+                const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(fileBuffer) }).promise;
+                let allLines = [];
+                for (let i = 1; i <= pdf.numPages; i++) {
+                    const page = await pdf.getPage(i);
+                    const textContent = await page.getTextContent();
+                    allLines.push(...reconstructLinesFromItems(textContent.items));
+                }
+                fullText = allLines.join('\n');
+            } else if (file.type === 'text/plain') {
+                fullText = await file.text();
+            } else {
+                // Erro para tipos de arquivo não suportados
+                throw new Error('Formato de arquivo não suportado. Por favor, envie um PDF ou TXT.');
             }
-            const fullText = allLines.join('\n');
-            const analysis = analyzePaymentStatus(fullText);
+            
+            const analysis = analyzePaymentStatus(fullText, referenceYear);
             displayAnalysisResult(analysis);
+
         } catch (error) {
-            console.error('Erro ao processar o PDF:', error);
-            displayAnalysisResult({ error: 'O arquivo parece ser um PDF inválido ou corrompido.' });
+            console.error('Erro ao processar o arquivo:', error);
+            displayAnalysisResult({ error: error.message || 'O arquivo parece ser inválido ou corrompido.' });
         } finally {
             loader.classList.add('hidden');
             analyzeBtn.disabled = false;
@@ -335,6 +340,8 @@
     clearBtn.addEventListener('click', () => {
         pdfFileInput.value = '';
         fileNameDisplay.textContent = '';
+        // NOVO: Limpa o campo do ano de referência
+        referenceYearInput.value = '';
         document.getElementById('file-info').classList.add('hidden');
         document.getElementById('file-info').classList.remove('flex');
         document.getElementById('upload-prompt').classList.remove('hidden');
@@ -345,9 +352,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
-
