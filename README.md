@@ -1,52 +1,79 @@
-Analista de Pagamentos de Férias
+# 📄 Reader - Leitor de PDF Minimalista
 
-📖 Sobre o Projeto
-O Analisador de Pagamentos de Férias é uma ferramenta desenvolvida para automatizar e simplificar a verificação do status de pagamento de férias a partir de documentos em formato PDF.
+[![HTML5](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)](https://developer.mozilla.org/pt-BR/docs/Web/HTML)
+[![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript)
+[![Tailwind CDN](https://img.shields.io/badge/Tailwind-CDN-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![pdf.js](https://img.shields.io/badge/pdf.js-Mozilla-FF5722?logo=mozilla&logoColor=white)](https://mozilla.github.io/pdf.js/)
+[![Static Site](https://img.shields.io/badge/Site-Estático-brightgreen)](https://pt.wikipedia.org/wiki/S%C3%ADtio_web_est%C3%A1tico)
 
-A aplicação permite que o usuário faça o upload de um arquivo PDF, extrai as informações relevantes de forma inteligente e apresenta um relatório claro, indicando se o pagamento foi efetuado, além de exibir os detalhes do lançamento, nome do servidor e data de exercício.
+**Reader** é um leitor de PDF minimalista, construído totalmente em Vanilla JavaScript, HTML e Tailwind CSS. Ele usa a biblioteca `pdf.js` da Mozilla para renderizar arquivos PDF diretamente no navegador, sem a necessidade de um backend.
 
-✨ Funcionalidades
-Extração de Dados de PDF: Utiliza a biblioteca PDF.js para ler e interpretar o conteúdo de arquivos PDF diretamente no navegador.
-
-Análise Inteligente: Identifica automaticamente o nome do servidor, data de exercício e a tabela de lançamentos de férias no documento.
-
-Verificação de Status: Determina se o servidor foi pago com base no ano de pagamento encontrado nos dados.
-
-Interface Intuitiva: Um design moderno com área para arrastar e soltar (drag-and-drop) o arquivo, facilitando o uso.
-
-Relatório Detalhado: Exibe os resultados em uma janela modal bem estruturada, com ícones e cores que facilitam a identificação do status (pago ou não pago).
-
-Responsividade: A interface é totalmente adaptável para uso em diferentes dispositivos, como desktops e celulares.
+A aplicação é 100% client-side: o usuário seleciona um arquivo PDF local, e o JavaScript o processa e exibe, página por página. Nenhum dado é enviado para um servidor.
 
 
-🚀 Como Usar
-Para utilizar a ferramenta, siga os passos abaixo:
 
-Abra o navegador e insira a URL: https://reader-tau-azure.vercel.app/)
+---
 
-Clique na área indicada ou arraste e solte um arquivo PDF para a caixa de upload.
+## 📜 Tabela de Conteúdos
 
-Após selecionar o arquivo, o nome dele será exibido na tela.
+* [Sobre o Projeto](#-sobre-o-projeto)
+* [Principais Funcionalidades](#✨-principais-funcionalidades)
+* [Tecnologias Utilizadas](#-tecnologias-utilizadas)
+* [Como Usar (Localmente)](#-como-usar-localmente)
+* [Como Fazer o Deploy](#-como-fazer-o-deploy)
 
-Clique no botão Analisar Pagamento.
+---
 
-Aguarde o processamento do arquivo.
+## 📖 Sobre o Projeto
 
-O resultado completo da análise, incluindo o status do pagamento e os detalhes da tabela, será exibido em uma janela modal.
+Este projeto foi criado para ser um visualizador de PDF leve, portátil e que funcione online ou offline. Ele demonstra o poder da biblioteca `pdf.js` da Mozilla para carregar e renderizar documentos complexos diretamente em um elemento `<canvas>` do HTML, oferecendo uma experiência de leitura fluida com controles de paginação básicos.
 
-🛠️ Tecnologias Utilizadas
-Este projeto foi construído utilizando as seguintes tecnologias:
+Toda a lógica está contida no `index.html` e é executada no navegador do usuário.
 
-HTML5: Estrutura principal da página.
+## ✨ Principais Funcionalidades
 
-Tailwind CSS: Framework utilizado para a estilização rápida e a criação de um design moderno e responsivo.
+* **Upload de PDF Local:** Permite que o usuário carregue um arquivo PDF do seu próprio computador (`<input type="file">`).
+* **Renderização no Canvas:** Exibe as páginas do PDF em um elemento `<canvas>` do HTML5.
+* **Controles de Paginação:** Inclui botões de "Próxima Página" e "Página Anterior".
+* **Contador de Páginas:** Mostra o número da página atual e o total de páginas do documento (ex: "Página 1 de 10").
+* **Interface Limpa:** Estilizado com Tailwind CSS (via CDN) para um visual moderno.
+* **Zero Dependências de Build:** Não requer `npm`, `node` ou qualquer processo de build. Tudo é carregado via CDN.
+* **100% Estático:** Roda em qualquer servidor web simples ou até mesmo localmente.
 
-JavaScript: Linguagem de programação para toda a lógica da aplicação.
+## 🛠️ Tecnologias Utilizadas
 
-PDF.js (da Mozilla): Biblioteca para renderizar e extrair texto de arquivos PDF no lado do cliente (navegador).
+* **HTML5**
+* **Tailwind CSS (via CDN):** Para estilização da interface.
+* **Vanilla JavaScript (ES6+):** Para toda a lógica de manipulação de DOM e paginação.
+* **Mozilla `pdf.js` (via CDN):** A biblioteca principal que faz todo o trabalho de "parse" e renderização do PDF.
+* **Lucide Icons (via CDN):** Para os ícones da interface.
 
-👥 Criadores Idealizador: ISAAC.J.S.B
+---
 
-Desenvolvedores: GIULIANO.L.A.F & HENRIQUE.B
+## 🏃 Como Usar (Localmente)
 
-📄 Licença Direitos reservados aos Desenvolvedores e usuários autorizados.
+Este projeto é 100% client-side e **não requer um servidor web** para funcionar (ao contrário de projetos que usam `fetch` para carregar dados JSON).
+
+1.  Clone o repositório:
+    ```bash
+    git clone [https://github.com/SEU-USUARIO/SEU-REPOSITORIO.git](https://github.com/SEU-USUARIO/SEU-REPOSITORIO.git)
+    cd SEU-REPOSITORIO
+    ```
+
+2.  Abra o arquivo `index.html` diretamente no seu navegador (ex: clicando duas vezes no arquivo).
+
+3.  Clique no botão "Carregar PDF" (ou no ícone de upload) e selecione um arquivo PDF do seu computador.
+
+4.  O PDF será carregado e renderizado, e você poderá usar os botões de paginação para navegar.
+
+## 🚀 Como Fazer o Deploy
+
+Este projeto é um **Site Estático**. Você pode fazer o deploy em qualquer serviço de hospedagem de sites estáticos, como **Vercel**, **Netlify** ou **GitHub Pages**.
+
+1.  Envie seu repositório para o GitHub.
+2.  Importe o repositório na Vercel ou Netlify.
+3.  **Não é necessário um "Comando de Build" (Build Command)**. Deixe este campo em branco.
+4.  **Não é necessário um "Diretório de Saída" (Output Directory)**.
+5.  Clique em "Deploy".
+
+A aplicação estará online e pronta para ser usada.
